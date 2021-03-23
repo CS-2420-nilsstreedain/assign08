@@ -106,17 +106,29 @@ public class BinarySearchTree<Type extends Comparable<? super Type>> implements 
 			return false;
 		}
 
-		public boolean contains(T item) {
+		public boolean recursiveContains(T item) {
 			if (item.compareTo(this.element) == 0)
 				return true;
 
 			else if (item.compareTo(this.element) < 0)
-				this.leftChild.contains(item);
+				this.leftChild.recursiveContains(item);
 
 			else if (item.compareTo(this.element) > 0)
-				this.rightChild.contains(item);
+				this.rightChild.recursiveContains(item);
 
 			return false;
+		}
+		
+		public T recursiveFirst() {
+			if (this.leftChild != null)
+				this.leftChild.recursiveFirst();
+			return this.element;
+		}
+		
+		public T recursiveLast() {
+			if (this.rightChild != null)
+				this.rightChild.recursiveLast();
+			return this.element;
 		}
 	}
 
@@ -142,7 +154,12 @@ public class BinarySearchTree<Type extends Comparable<? super Type>> implements 
 	 */
 	@Override
 	public boolean add(Type item) {
-		return root.recursiveAdd(item);
+		if (root.recursiveAdd(item)) {
+			size++;
+			return true;
+		}
+		return false;
+		
 	}
 
 	/**
@@ -160,7 +177,7 @@ public class BinarySearchTree<Type extends Comparable<? super Type>> implements 
 		boolean anyAdded = false;
 
 		for (Type item : items)
-			if (root.recursiveAdd(item))
+			if (this.add(item))
 				anyAdded = true;
 
 		return anyAdded;
@@ -186,7 +203,7 @@ public class BinarySearchTree<Type extends Comparable<? super Type>> implements 
 	 */
 	@Override
 	public boolean contains(Type item) {
-		return root.contains(item);
+		return root.recursiveContains(item);
 	}
 
 	/**
@@ -201,7 +218,7 @@ public class BinarySearchTree<Type extends Comparable<? super Type>> implements 
 	@Override
 	public boolean containsAll(Collection<? extends Type> items) {
 		for (Type item : items)
-			if (!root.contains(item))
+			if (!this.contains(item))
 				return false;
 
 		return true;
@@ -214,20 +231,29 @@ public class BinarySearchTree<Type extends Comparable<? super Type>> implements 
 	 */
 	@Override
 	public Type first() throws NoSuchElementException {
-		// TODO Auto-generated method stub
-		return null;
+		if (size == 0)
+			throw new NoSuchElementException();
+		return root.recursiveFirst();
 	}
 
+	/**
+	 * Returns true if this set contains no items.
+	 */
 	@Override
 	public boolean isEmpty() {
-		// TODO Auto-generated method stub
-		return false;
+		return size == 0;
 	}
 
+	/**
+	 * Returns the last (i.e., largest) item in this set.
+	 * 
+	 * @throws NoSuchElementException if the set is empty
+	 */
 	@Override
 	public Type last() throws NoSuchElementException {
-		// TODO Auto-generated method stub
-		return null;
+		if (size == 0)
+			throw new NoSuchElementException();
+		return root.recursiveLast();
 	}
 
 	@Override
@@ -242,10 +268,12 @@ public class BinarySearchTree<Type extends Comparable<? super Type>> implements 
 		return false;
 	}
 
+	/**
+	 * Returns the number of items in this set.
+	 */
 	@Override
 	public int size() {
-		// TODO Auto-generated method stub
-		return 0;
+		return size;
 	}
 
 	@Override
