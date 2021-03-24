@@ -1,5 +1,7 @@
 package assign08;
 
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.NoSuchElementException;
@@ -72,11 +74,11 @@ public class BinarySearchTree<Type extends Comparable<? super Type>> implements 
 		}
 
 		public BinaryNode<T> recursiveFind(T item) {
-			if (item.compareTo(this.element) < 0)
-				this.leftChild.recursiveFind(item);
+			if (item.compareTo(this.element) < 0 && this.leftChild != null)
+				return this.leftChild.recursiveFind(item);
 
-			if (item.compareTo(this.element) > 0)
-				this.rightChild.recursiveFind(item);
+			if (item.compareTo(this.element) > 0 && this.rightChild != null)
+				return this.rightChild.recursiveFind(item);
 
 			if (item.compareTo(this.element) == 0)
 				return this;
@@ -86,13 +88,13 @@ public class BinarySearchTree<Type extends Comparable<? super Type>> implements 
 
 		public BinaryNode<T> recursiveFirst() {
 			if (this.leftChild != null)
-				this.leftChild.recursiveFirst();
+				return this.leftChild.recursiveFirst();
 			return this;
 		}
 
 		public BinaryNode<T> recursiveLast() {
 			if (this.rightChild != null)
-				this.rightChild.recursiveLast();
+				return this.rightChild.recursiveLast();
 			return this;
 		}
 		
@@ -104,7 +106,6 @@ public class BinarySearchTree<Type extends Comparable<? super Type>> implements 
 			
 			if (this.rightChild != null) 
 				this.rightChild.inOrder(resultArrayList);
-			
 		}
 	}
 
@@ -134,7 +135,8 @@ public class BinarySearchTree<Type extends Comparable<? super Type>> implements 
 			root = new BinaryNode<Type>(item);
 			size++;
 			return true;
-		} else if (root.recursiveAdd(item)) {
+		}
+		if (root.recursiveAdd(item)) {
 			size++;
 			return true;
 		}
@@ -183,6 +185,9 @@ public class BinarySearchTree<Type extends Comparable<? super Type>> implements 
 	 */
 	@Override
 	public boolean contains(Type item) {
+		if (root == null)
+			return false;
+		
 		if (root.recursiveFind(item) != null)
 			return true;
 
@@ -346,4 +351,26 @@ public class BinarySearchTree<Type extends Comparable<? super Type>> implements 
 		return resultArrayList;
 	}
 
+	/**
+	 * Write a DOT representation of this BST to file.
+	 * 
+	 * @param filename
+	 */
+	public void generateDotFile(String filename) {
+		try {
+			PrintWriter out = new PrintWriter(filename);
+			out.println("digraph Tree {\n\tnode [shape=record]\n");
+
+			if(root == null)
+				out.println("");
+			else
+				out.print(root.generateDot());
+
+			out.println("}");
+			out.close();
+		}
+		catch(IOException e) {
+			System.out.println(e);
+		}
+	}
 }
