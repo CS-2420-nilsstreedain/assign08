@@ -85,8 +85,6 @@ class BinarySearchTreeTester {
 		for (int i = 0; i < 5; i++)
 			emptyBST.add(i);
 		
-		System.out.println(emptyBST.toArrayList());
-		
 		assertTrue(emptyBST.contains(0));
 		assertTrue(emptyBST.contains(1));
 		assertTrue(emptyBST.contains(2));
@@ -131,4 +129,78 @@ class BinarySearchTreeTester {
 		
 		assertEquals(-1, emptyBST.first());
 	} 
+	
+// last()
+	@Test
+	void emptyTreeLast() {
+		assertThrows(NoSuchElementException.class, () -> {
+			emptyBST.last();
+		});
+	}
+	
+	@Test
+	void singleElementLast() {
+		emptyBST.add(0);
+		
+		assertEquals(0, emptyBST.last());
+	}
+	
+	@Test
+	void manyRandomElementsLast() {
+		for (int i = 0; i < 1000; i++)
+			emptyBST.add(rng.nextInt(100));
+		emptyBST.add(100);
+		
+		assertEquals(100, emptyBST.last());
+	} 
+	
+// remove()
+	@Test
+	void emptyTreeRemove() {
+		assertFalse(emptyBST.remove(1));
+	}
+	
+	@Test
+	void singleElementRemove() {
+		emptyBST.add(1);
+		assertTrue(emptyBST.remove(1));
+	}
+	
+	@Test
+	void moreElementRemove() {
+		emptyBST.add(0);
+		emptyBST.add(3);
+		emptyBST.add(2);
+		emptyBST.add(4);
+		emptyBST.add(5);
+		emptyBST.add(-3);
+		emptyBST.add(-2);
+		emptyBST.add(-4);
+		emptyBST.add(5);
+		
+		emptyBST.remove(3);
+		assertFalse(emptyBST.contains(3));	
+	}
+	
+	@Test
+	void bypassNode() {
+		emptyBST.add(0);
+		emptyBST.add(10);
+		emptyBST.add(11);
+		emptyBST.add(12);
+		
+		System.out.println(emptyBST.remove(99));
+	}
+	
+	@Test
+	void manyElementRemove() {
+		for (int i = 0; i < 10; i++) 
+			emptyBST.add(rng.nextInt(100));
+		emptyBST.generateDotFile("src/assign08/before");
+		for (int i = 0; i < 50; i++) 
+			emptyBST.remove(rng.nextInt(100));
+		emptyBST.generateDotFile("src/assign08/after");
+
+	}
+
 }

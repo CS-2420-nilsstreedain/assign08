@@ -131,7 +131,7 @@ public class BinarySearchTree<Type extends Comparable<? super Type>> implements 
 	 */
 	@Override
 	public boolean add(Type item) {
-		if (root == null) {
+		if (size == 0) {
 			root = new BinaryNode<Type>(item);
 			size++;
 			return true;
@@ -185,7 +185,7 @@ public class BinarySearchTree<Type extends Comparable<? super Type>> implements 
 	 */
 	@Override
 	public boolean contains(Type item) {
-		if (root == null)
+		if (size == 0)
 			return false;
 		
 		if (root.recursiveFind(item) != null)
@@ -254,6 +254,9 @@ public class BinarySearchTree<Type extends Comparable<? super Type>> implements 
 	 */
 	@Override
 	public boolean remove(Type item) {
+		if (size == 0)
+			return false;
+		
 		BinaryNode<Type> itemNode = root.recursiveFind(item);
 
 		if (itemNode == null)
@@ -265,11 +268,10 @@ public class BinarySearchTree<Type extends Comparable<? super Type>> implements 
 		else if (itemNode.leftChild != null && itemNode.rightChild != null) {
 			BinaryNode<Type> replacementNode = itemNode.rightChild.recursiveFirst();
 
-			itemNode.parent.element = replacementNode.element;
+			itemNode.element = replacementNode.element;
 			removeLeaf(replacementNode);
-		}
-
-		else
+			itemNode.rightChild = replacementNode.rightChild;
+		} else
 			bypassNode(itemNode);
 
 		size--;
@@ -282,9 +284,10 @@ public class BinarySearchTree<Type extends Comparable<? super Type>> implements 
 	 * @param itemNode - the leaf of the BinarySearchTree to be removed
 	 */
 	private void removeLeaf(BinaryNode<Type> itemNode) {
-		if (itemNode.element.compareTo(itemNode.parent.element) < 0)
+		if (itemNode.equals(root))
+			root = null;
+		else if (itemNode.element.compareTo(itemNode.parent.element) < 0)
 			itemNode.parent.leftChild = null;
-
 		else
 			itemNode.parent.rightChild = null;
 	}

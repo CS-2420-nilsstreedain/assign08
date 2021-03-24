@@ -1,0 +1,21 @@
+digraph Tree {
+	node [shape=record]
+
+	node20 [label = "<f0> |<f1> 20|<f2> "]
+	node20:f0 -> node7:f1
+	node7 [label = "<f0> |<f1> 7|<f2> "]
+	node20:f2 -> node33:f1
+	node33 [label = "<f0> |<f1> 33|<f2> "]
+	node33:f0 -> node31:f1
+	node31 [label = "<f0> |<f1> 31|<f2> "]
+	node33:f2 -> node57:f1
+	node57 [label = "<f0> |<f1> 57|<f2> "]
+	node57:f0 -> node36:f1
+	node36 [label = "<f0> |<f1> 36|<f2> "]
+	node57:f2 -> node81:f1
+	node81 [label = "<f0> |<f1> 81|<f2> "]
+	node81:f0 -> node68:f1
+	node68 [label = "<f0> |<f1> 68|<f2> "]
+	node68:f0 -> node65:f1
+	node65 [label = "<f0> |<f1> 65|<f2> "]
+}
