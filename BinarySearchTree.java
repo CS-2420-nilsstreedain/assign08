@@ -1,12 +1,8 @@
 package assign08;
 
-import static org.junit.Assert.assertNotNull;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.NoSuchElementException;
-
-import jdk.nashorn.internal.ir.BinaryNode;
 
 public class BinarySearchTree<Type extends Comparable<? super Type>> implements SortedSet<Type> {
 
@@ -136,6 +132,17 @@ public class BinarySearchTree<Type extends Comparable<? super Type>> implements 
 			if (this.rightChild != null)
 				this.rightChild.recursiveLast();
 			return this;
+		}
+		
+		public void inOrder(ArrayList<T> resultArrayList) {
+			if (this.leftChild != null)
+				this.leftChild.inOrder(resultArrayList);
+			
+			resultArrayList.add(this.element);
+			
+			if (this.rightChild != null) 
+				this.rightChild.inOrder(resultArrayList);
+			
 		}
 	}
 
@@ -335,10 +342,22 @@ public class BinarySearchTree<Type extends Comparable<? super Type>> implements 
 		}
 	}
 
+	/**
+	 * Removes all items in the BinarySearchTree that match items from the passed
+	 * in collection.
+	 * 
+	 * @param items - the collection of items whose absence is ensured in this set
+	 * @return true if this set changed as a result of this method call (that is, if
+	 *         any item in the input collection was actually removed); otherwise,
+	 *         returns false
+	 */
 	@Override
 	public boolean removeAll(Collection<? extends Type> items) {
-		// TODO Auto-generated method stub
-		return false;
+		boolean wasChanged = false;
+		for (Type item : items) 
+			if (remove(item))
+				wasChanged = true;
+		return wasChanged;
 	}
 
 	/**
@@ -349,10 +368,15 @@ public class BinarySearchTree<Type extends Comparable<? super Type>> implements 
 		return size;
 	}
 
+	/**
+	 * Returns an ArrayList containing all of the items in this set, in sorted
+	 * order.
+	 */
 	@Override
 	public ArrayList<Type> toArrayList() {
-		// TODO Auto-generated method stub
-		return null;
+		ArrayList<Type> resultArrayList = new ArrayList<>();
+		root.inOrder(resultArrayList);
+		return resultArrayList;
 	}
 
 }
