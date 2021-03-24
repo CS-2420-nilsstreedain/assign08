@@ -17,14 +17,14 @@ class BinarySearchTreeTester {
 // add()
 	@Test
 	void addToEmpty() {
-		emptyBST.add(5);
-		emptyBST.add(2);
-		emptyBST.add(3);
-		emptyBST.add(8);
-		emptyBST.add(1);
-		emptyBST.add(-10);
-		emptyBST.add(40);
-		emptyBST.add(22);
+		System.out.println(emptyBST.add(5));
+		System.out.println(emptyBST.add(2));
+		System.out.println(emptyBST.add(3));
+		System.out.println(emptyBST.add(8));
+		System.out.println(emptyBST.add(1));
+		System.out.println(emptyBST.add(-10));
+		System.out.println(emptyBST.add(40));
+		System.out.println(emptyBST.add(22));
 		
 		System.out.println(emptyBST.toArrayList());
 		

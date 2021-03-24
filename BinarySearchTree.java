@@ -45,13 +45,16 @@ public class BinarySearchTree<Type extends Comparable<? super Type>> implements 
 		}
 
 		public boolean recursiveAdd(T item) {
+			
 			if (item.compareTo(this.element) < 0) {
 				if (this.leftChild == null) {
 					this.leftChild = new BinaryNode<T>(item);
 					this.leftChild.parent = this;
 					return true;
 				}
-				this.leftChild.recursiveAdd(item);
+				if (this.leftChild.recursiveAdd(item))
+					return true;
+				
 			}
 
 			if (item.compareTo(this.element) > 0) {
@@ -60,7 +63,9 @@ public class BinarySearchTree<Type extends Comparable<? super Type>> implements 
 					this.rightChild.parent = this;
 					return true;
 				}
-				this.rightChild.recursiveAdd(item);
+				if (this.rightChild.recursiveAdd(item))
+					return true;
+				
 			}
 
 			return false;
@@ -129,8 +134,7 @@ public class BinarySearchTree<Type extends Comparable<? super Type>> implements 
 			root = new BinaryNode<Type>(item);
 			size++;
 			return true;
-		} 
-		if (root.recursiveAdd(item)) {
+		} else if (root.recursiveAdd(item)) {
 			size++;
 			return true;
 		}
