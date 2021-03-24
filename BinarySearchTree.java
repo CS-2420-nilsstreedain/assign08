@@ -288,30 +288,10 @@ public class BinarySearchTree<Type extends Comparable<? super Type>> implements 
 			removeLeaf(itemNode);
 
 		else if (itemNode.leftChild != null && itemNode.rightChild != null) {
-//			BinaryNode<Type> originalNode = itemNode.duplicate();
 			BinaryNode<Type> replacementNode = itemNode.leftChild.recursiveLast();
-			
-			
-//			BinaryNode<Type>
 
 			itemNode.element = replacementNode.element;
-			
 			replacementNode.parent.leftChild = replacementNode.leftChild;
-			
-//			replacementNode.leftChild
-			
-//			removeLeaf(replacementNode);
-//			itemNode.rightChild = replacementNode.rightChild;
-			
-//			itemNode = replacementNode;
-//			itemNode.leftChild = originalNode.leftChild;
-//			itemNode.rightChild.recursiveLast() = originalNode.rightChild;
-			
-			
-			
-			
-			
-			
 		} else
 			bypassNode(itemNode);
 
