@@ -35,6 +35,28 @@ public class BinarySearchTree<Type extends Comparable<? super Type>> implements 
 		public BinaryNode(T element) {
 			this(element, null, null);
 		}
+		
+
+		/**
+		 * Generate a copy of the tree rooted at this node.
+		 * 
+		 * @return the tree copy
+		 */
+		public BinaryNode<T> duplicate() {
+			BinaryNode<T> copyLeft = null;
+			
+			// get copy of left subtree
+			if(leftChild != null)
+				copyLeft = leftChild.duplicate(); 
+
+			// get copy of right subtree
+			BinaryNode<T> copyRight = null;
+			if(rightChild != null)
+				copyRight = rightChild.duplicate(); 
+
+			// combine left and right in a new node w/ element
+			return new BinaryNode<T>(this.element, copyLeft, copyRight);
+		}
 
 		public String generateDot() {
 			String ret = "\tnode" + element + " [label = \"<f0> |<f1> " + element + "|<f2> \"]\n";
@@ -47,7 +69,7 @@ public class BinarySearchTree<Type extends Comparable<? super Type>> implements 
 		}
 
 		public boolean recursiveAdd(T item) {
-			
+
 			if (item.compareTo(this.element) < 0) {
 				if (this.leftChild == null) {
 					this.leftChild = new BinaryNode<T>(item);
@@ -56,7 +78,7 @@ public class BinarySearchTree<Type extends Comparable<? super Type>> implements 
 				}
 				if (this.leftChild.recursiveAdd(item))
 					return true;
-				
+
 			}
 
 			if (item.compareTo(this.element) > 0) {
@@ -67,7 +89,7 @@ public class BinarySearchTree<Type extends Comparable<? super Type>> implements 
 				}
 				if (this.rightChild.recursiveAdd(item))
 					return true;
-				
+
 			}
 
 			return false;
@@ -97,14 +119,14 @@ public class BinarySearchTree<Type extends Comparable<? super Type>> implements 
 				return this.rightChild.recursiveLast();
 			return this;
 		}
-		
+
 		public void inOrder(ArrayList<T> resultArrayList) {
 			if (this.leftChild != null)
 				this.leftChild.inOrder(resultArrayList);
-			
+
 			resultArrayList.add(this.element);
-			
-			if (this.rightChild != null) 
+
+			if (this.rightChild != null)
 				this.rightChild.inOrder(resultArrayList);
 		}
 	}
@@ -187,7 +209,7 @@ public class BinarySearchTree<Type extends Comparable<? super Type>> implements 
 	public boolean contains(Type item) {
 		if (size == 0)
 			return false;
-		
+
 		if (root.recursiveFind(item) != null)
 			return true;
 
@@ -256,7 +278,7 @@ public class BinarySearchTree<Type extends Comparable<? super Type>> implements 
 	public boolean remove(Type item) {
 		if (size == 0)
 			return false;
-		
+
 		BinaryNode<Type> itemNode = root.recursiveFind(item);
 
 		if (itemNode == null)
@@ -266,11 +288,30 @@ public class BinarySearchTree<Type extends Comparable<? super Type>> implements 
 			removeLeaf(itemNode);
 
 		else if (itemNode.leftChild != null && itemNode.rightChild != null) {
-			BinaryNode<Type> replacementNode = itemNode.rightChild.recursiveFirst();
+//			BinaryNode<Type> originalNode = itemNode.duplicate();
+			BinaryNode<Type> replacementNode = itemNode.leftChild.recursiveLast();
+			
+			
+//			BinaryNode<Type>
 
 			itemNode.element = replacementNode.element;
-			removeLeaf(replacementNode);
-			itemNode.rightChild = replacementNode.rightChild;
+			
+			replacementNode.parent.leftChild = replacementNode.leftChild;
+			
+//			replacementNode.leftChild
+			
+//			removeLeaf(replacementNode);
+//			itemNode.rightChild = replacementNode.rightChild;
+			
+//			itemNode = replacementNode;
+//			itemNode.leftChild = originalNode.leftChild;
+//			itemNode.rightChild.recursiveLast() = originalNode.rightChild;
+			
+			
+			
+			
+			
+			
 		} else
 			bypassNode(itemNode);
 
@@ -284,8 +325,11 @@ public class BinarySearchTree<Type extends Comparable<? super Type>> implements 
 	 * @param itemNode - the leaf of the BinarySearchTree to be removed
 	 */
 	private void removeLeaf(BinaryNode<Type> itemNode) {
+		// If the Node being removed is the root and a leaf, root is set to null
 		if (itemNode.equals(root))
 			root = null;
+		
+		// Determines whether the left of right child should be set to null
 		else if (itemNode.element.compareTo(itemNode.parent.element) < 0)
 			itemNode.parent.leftChild = null;
 		else
@@ -298,9 +342,17 @@ public class BinarySearchTree<Type extends Comparable<? super Type>> implements 
 	 * @param itemNode - Node to be bypassed
 	 */
 	private void bypassNode(BinaryNode<Type> itemNode) {
+		// Edge case for when the root is removed with bypassNode
+		if (itemNode.equals(root)) {
+			if (itemNode.leftChild != null)
+				root = itemNode.leftChild;
+			else
+				root = itemNode.rightChild;
+		}
+
 		// Makes sure the child of the bypassed Node is set as the correct child of the
 		// parent Node
-		if (itemNode.element.compareTo(itemNode.parent.element) < 0) {
+		else if (itemNode.element.compareTo(itemNode.parent.element) < 0) {
 
 			// Checks which child exists and adds it as the child of the parent
 			if (itemNode.leftChild != null)
@@ -318,8 +370,8 @@ public class BinarySearchTree<Type extends Comparable<? super Type>> implements 
 	}
 
 	/**
-	 * Removes all items in the BinarySearchTree that match items from the passed
-	 * in collection.
+	 * Removes all items in the BinarySearchTree that match items from the passed in
+	 * collection.
 	 * 
 	 * @param items - the collection of items whose absence is ensured in this set
 	 * @return true if this set changed as a result of this method call (that is, if
@@ -329,7 +381,7 @@ public class BinarySearchTree<Type extends Comparable<? super Type>> implements 
 	@Override
 	public boolean removeAll(Collection<? extends Type> items) {
 		boolean wasChanged = false;
-		for (Type item : items) 
+		for (Type item : items)
 			if (remove(item))
 				wasChanged = true;
 		return wasChanged;
@@ -350,7 +402,12 @@ public class BinarySearchTree<Type extends Comparable<? super Type>> implements 
 	@Override
 	public ArrayList<Type> toArrayList() {
 		ArrayList<Type> resultArrayList = new ArrayList<>();
+		
+		if (size == 0)
+			return resultArrayList;
+		
 		root.inOrder(resultArrayList);
+		
 		return resultArrayList;
 	}
 
@@ -364,15 +421,14 @@ public class BinarySearchTree<Type extends Comparable<? super Type>> implements 
 			PrintWriter out = new PrintWriter(filename);
 			out.println("digraph Tree {\n\tnode [shape=record]\n");
 
-			if(root == null)
+			if (root == null)
 				out.println("");
 			else
 				out.print(root.generateDot());
 
 			out.println("}");
 			out.close();
-		}
-		catch(IOException e) {
+		} catch (IOException e) {
 			System.out.println(e);
 		}
 	}

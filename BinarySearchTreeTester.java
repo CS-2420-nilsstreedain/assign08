@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.NoSuchElementException;
 import java.util.Random;
 
+import javax.swing.text.DocumentFilter.FilterBypass;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -166,6 +168,112 @@ class BinarySearchTreeTester {
 		assertTrue(emptyBST.remove(1));
 	}
 	
+	// removeLeaf()
+	@Test
+	void removeLeafRoot() {
+		emptyBST.add(1);
+//		System.out.println(emptyBST.toArrayList());
+		assertTrue(emptyBST.remove(1));
+//		System.out.println(emptyBST.toArrayList());
+		
+	}
+	
+	@Test
+	void removeLeftLeaf() {
+		emptyBST.add(3);
+		emptyBST.add(2);
+		emptyBST.add(1);
+//		System.out.println(emptyBST.toArrayList());
+		assertTrue(emptyBST.remove(1));
+//		System.out.println(emptyBST.toArrayList());
+	}
+	
+	@Test
+	void removeRightLeaf() {
+		emptyBST.add(1);
+		emptyBST.add(2);
+		emptyBST.add(3);
+//		System.out.println(emptyBST.toArrayList());
+		assertTrue(emptyBST.remove(3));
+//		System.out.println(emptyBST.toArrayList());
+	}
+	
+	// bypassNode()
+	@Test
+	void bypassRootNode() {
+		emptyBST.add(1);
+		emptyBST.add(2);
+		emptyBST.add(3);
+//		System.out.println(emptyBST.toArrayList());
+		assertTrue(emptyBST.remove(1));
+//		System.out.println(emptyBST.toArrayList());
+	}
+	
+	@Test
+	void bypassRootLefttChild() {
+		emptyBST.add(3);
+		emptyBST.add(2);
+		emptyBST.add(1);
+//		System.out.println(emptyBST.toArrayList());
+		assertTrue(emptyBST.remove(2));
+//		System.out.println(emptyBST.toArrayList());
+	}
+	
+	@Test
+	void bypassRootRightChild() {
+		emptyBST.add(1);
+		emptyBST.add(2);
+		emptyBST.add(3);
+//		System.out.println(emptyBST.toArrayList());
+		assertTrue(emptyBST.remove(2));
+//		System.out.println(emptyBST.toArrayList());
+	}
+	
+	// remove Node with two children
+	
+	@Test
+	void removeNodeWithTwoChild() {
+		emptyBST.add(4);
+		emptyBST.add(2);
+		emptyBST.add(1);
+		emptyBST.add(3);
+//		System.out.println(emptyBST.toArrayList());
+		assertTrue(emptyBST.remove(2));
+//		System.out.println(emptyBST.toArrayList());
+	}
+	
+	@Test
+	void twoChildRightSemiHeavy() {
+		emptyBST.add(10);
+		emptyBST.add(2);
+		emptyBST.add(1);
+		emptyBST.add(9);
+		emptyBST.add(7);
+		emptyBST.add(8);
+//		System.out.println(emptyBST.toArrayList());
+//		emptyBST.generateDotFile("src/assign08/before.txt");
+		assertTrue(emptyBST.remove(2));
+//		System.out.println(emptyBST.toArrayList());
+//		emptyBST.generateDotFile("src/assign08/after.txt");
+	}
+	
+	@Test
+	void twoChildLeftSemiHeavy() {
+		emptyBST.add(10);
+		emptyBST.add(15);
+		emptyBST.add(14);
+		emptyBST.add(16);
+		emptyBST.add(12);
+		emptyBST.add(13);
+//		System.out.println(emptyBST.toArrayList());
+//		emptyBST.generateDotFile("src/assign08/before.txt");
+		assertTrue(emptyBST.remove(15));
+//		System.out.println(emptyBST.toArrayList());
+//		emptyBST.generateDotFile("src/assign08/after.txt");
+	}
+	
+	
+	
 	@Test
 	void moreElementRemove() {
 		emptyBST.add(0);
@@ -189,17 +297,17 @@ class BinarySearchTreeTester {
 		emptyBST.add(11);
 		emptyBST.add(12);
 		
-		System.out.println(emptyBST.remove(99));
+//		System.out.println(emptyBST.remove(99));
 	}
 	
 	@Test
 	void manyElementRemove() {
 		for (int i = 0; i < 10; i++) 
 			emptyBST.add(rng.nextInt(100));
-		emptyBST.generateDotFile("src/assign08/before");
+//		emptyBST.generateDotFile("src/assign08/before.txt");
 		for (int i = 0; i < 50; i++) 
 			emptyBST.remove(rng.nextInt(100));
-		emptyBST.generateDotFile("src/assign08/after");
+//		emptyBST.generateDotFile("src/assign08/after.txt");
 
 	}
 

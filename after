@@ -1,7 +1,0 @@
-digraph Tree {
-	node [shape=record]
-
-	node4 [label = "<f0> |<f1> 4|<f2> "]
-	node4:f0 -> node1:f1
-	node1 [label = "<f0> |<f1> 1|<f2> "]
-}
