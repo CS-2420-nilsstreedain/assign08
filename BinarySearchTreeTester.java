@@ -210,7 +210,7 @@ class BinarySearchTreeTester {
 	}
 	
 	@Test
-	void bypassRootLefttChild() {
+	void bypassRootLeftChild() {
 		emptyBST.add(3);
 		emptyBST.add(2);
 		emptyBST.add(1);
@@ -272,6 +272,38 @@ class BinarySearchTreeTester {
 //		emptyBST.generateDotFile("src/assign08/after.txt");
 	}
 	
+	@Test
+	void twoChildLeftHeavy() {
+		emptyBST.add(10);
+		emptyBST.add(5);
+		emptyBST.add(6);
+		emptyBST.add(4);
+		emptyBST.add(3);
+		emptyBST.add(2);
+//		System.out.println(emptyBST.toArrayList());
+//		emptyBST.generateDotFile("src/assign08/before.txt");
+		assertTrue(emptyBST.remove(5));
+//		System.out.println(emptyBST.toArrayList());
+//		emptyBST.generateDotFile("src/assign08/after.txt");
+	}
+	
+	@Test
+	void twoChildRightHeavy() {
+		emptyBST.add(10);
+		emptyBST.add(3);
+		emptyBST.add(2);
+		emptyBST.add(4);
+		emptyBST.add(5);
+		emptyBST.add(6);
+		emptyBST.add(7);
+		emptyBST.add(8);
+//		System.out.println(emptyBST.toArrayList());
+//		emptyBST.generateDotFile("src/assign08/before.txt");
+		assertTrue(emptyBST.remove(3));
+//		System.out.println(emptyBST.toArrayList());
+//		emptyBST.generateDotFile("src/assign08/after.txt");
+	}
+	
 	
 	
 	@Test
@@ -302,12 +334,12 @@ class BinarySearchTreeTester {
 	
 	@Test
 	void manyElementRemove() {
-		for (int i = 0; i < 10; i++) 
+		for (int i = 0; i < 200; i++) 
 			emptyBST.add(rng.nextInt(100));
-//		emptyBST.generateDotFile("src/assign08/before.txt");
-		for (int i = 0; i < 50; i++) 
+		emptyBST.generateDotFile("src/assign08/before.txt");
+		for (int i = 0; i < 100; i++) 
 			emptyBST.remove(rng.nextInt(100));
-//		emptyBST.generateDotFile("src/assign08/after.txt");
+		emptyBST.generateDotFile("src/assign08/after.txt");
 
 	}
 
