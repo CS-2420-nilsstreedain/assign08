@@ -334,11 +334,11 @@ class BinarySearchTreeTester {
 	
 	@Test
 	void manyElementRemove() {
-		for (int i = 0; i < 200; i++) 
-			emptyBST.add(rng.nextInt(100));
+		for (int i = 0; i < 400; i++) 
+			emptyBST.add(rng.nextInt(200));
 		emptyBST.generateDotFile("src/assign08/before.txt");
 		for (int i = 0; i < 100; i++) 
-			emptyBST.remove(rng.nextInt(100));
+			emptyBST.remove(rng.nextInt(200));
 		emptyBST.generateDotFile("src/assign08/after.txt");
 
 	}

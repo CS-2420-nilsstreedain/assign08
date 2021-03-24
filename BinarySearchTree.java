@@ -288,10 +288,41 @@ public class BinarySearchTree<Type extends Comparable<? super Type>> implements 
 			removeLeaf(itemNode);
 
 		else if (itemNode.leftChild != null && itemNode.rightChild != null) {
-			BinaryNode<Type> replacementNode = itemNode.leftChild.recursiveLast();
+			//gets the smallest node on the right side
+			BinaryNode<Type> replacementNode = itemNode.rightChild.recursiveFirst();
 
+			//sets the item node, node to delete, to the new value
 			itemNode.element = replacementNode.element;
-			replacementNode.parent.leftChild = replacementNode.leftChild;
+			
+			//if the parent of the replacement node is NOT the node to delete,
+			//then we redirect replacement node's parent to replacement node's
+			//right child, as it will always have one, or it will be null.
+			if (!replacementNode.parent.equals(itemNode)) {
+				replacementNode.parent.leftChild = replacementNode.rightChild;
+		
+				//if replacement node's right child is null, replacement node's parent's left child
+				//should be null
+				if (replacementNode.rightChild == null)
+					replacementNode.parent.leftChild = null;
+				else	
+				//else, if replacement node's right child exists, set its parent to replacement node's parent	
+					replacementNode.rightChild.parent = replacementNode.parent;
+			}
+			
+			//edge case for when the parent of the replacement node IS the
+			//node to delete, so we don't go doing stuff on the left
+			//side of item to delete where nothing should change
+			else {
+				//from newly deleted/changed item node, we bypass our replacement 
+				//node with its child
+				//can ONLY be right child from replacement because replacement is a leftmost node
+				itemNode.rightChild = replacementNode.rightChild;
+				//if replacement node's child is not null,
+				//we set its parent to item node to ignore replacement node
+				if (replacementNode.rightChild != null)
+					replacementNode.rightChild.parent = itemNode;
+			}
+			
 		} else
 			bypassNode(itemNode);
 
@@ -324,10 +355,16 @@ public class BinarySearchTree<Type extends Comparable<? super Type>> implements 
 	private void bypassNode(BinaryNode<Type> itemNode) {
 		// Edge case for when the root is removed with bypassNode
 		if (itemNode.equals(root)) {
-			if (itemNode.leftChild != null)
+			if (itemNode.leftChild != null) {
 				root = itemNode.leftChild;
-			else
+				root.parent = null;
+				root.leftChild.parent = root;
+			}
+			else {
 				root = itemNode.rightChild;
+				root.parent = null;
+				root.rightChild.parent = root;
+			}	
 		}
 
 		// Makes sure the child of the bypassed Node is set as the correct child of the
@@ -335,17 +372,29 @@ public class BinarySearchTree<Type extends Comparable<? super Type>> implements 
 		else if (itemNode.element.compareTo(itemNode.parent.element) < 0) {
 
 			// Checks which child exists and adds it as the child of the parent
-			if (itemNode.leftChild != null)
+			if (itemNode.leftChild != null) {
 				itemNode.parent.leftChild = itemNode.leftChild;
-			else
+				itemNode.parent.leftChild.parent = itemNode.parent;
+				//makes itemNode's child's parent skip over itemNode
+			}	
+			else {
 				itemNode.parent.leftChild = itemNode.rightChild;
+				itemNode.parent.leftChild.parent = itemNode.parent;
+				//makes itemNode's child's parent skip over itemNode
+			}	
 		} else {
 
 			// Checks which child exists and adds it as the child of the parent
-			if (itemNode.leftChild != null)
+			if (itemNode.leftChild != null) {
 				itemNode.parent.rightChild = itemNode.leftChild;
-			else
+				itemNode.parent.rightChild.parent = itemNode.parent;
+				//makes itemNode's child's parent skip over itemNode
+			}	
+			else {
 				itemNode.parent.rightChild = itemNode.rightChild;
+				itemNode.parent.rightChild.parent = itemNode.parent;
+				//makes itemNode's child's parent skip over itemNode
+			}	
 		}
 	}
 
