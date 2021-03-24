@@ -1,8 +1,12 @@
 package assign08;
 
+import static org.junit.Assert.assertNotNull;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.NoSuchElementException;
+
+import jdk.nashorn.internal.ir.BinaryNode;
 
 public class BinarySearchTree<Type extends Comparable<? super Type>> implements SortedSet<Type> {
 
@@ -10,6 +14,7 @@ public class BinarySearchTree<Type extends Comparable<? super Type>> implements 
 		public T element;
 		public BinaryNode<T> leftChild;
 		public BinaryNode<T> rightChild;
+		public BinaryNode<T> parent;
 
 		/**
 		 * Creates a new BinaryNode object.
@@ -90,6 +95,7 @@ public class BinarySearchTree<Type extends Comparable<? super Type>> implements 
 			if (item.compareTo(this.element) < 0) {
 				if (this.leftChild == null) {
 					this.leftChild = new BinaryNode<T>(item);
+					this.leftChild.parent = this;
 					return true;
 				}
 				this.leftChild.recursiveAdd(item);
@@ -98,6 +104,7 @@ public class BinarySearchTree<Type extends Comparable<? super Type>> implements 
 			if (item.compareTo(this.element) > 0) {
 				if (this.rightChild == null) {
 					this.rightChild = new BinaryNode<T>(item);
+					this.rightChild.parent = this;
 					return true;
 				}
 				this.rightChild.recursiveAdd(item);
@@ -106,29 +113,29 @@ public class BinarySearchTree<Type extends Comparable<? super Type>> implements 
 			return false;
 		}
 
-		public boolean recursiveContains(T item) {
+		public BinaryNode<T> recursiveFind(T item) {
+			if (item.compareTo(this.element) < 0)
+				this.leftChild.recursiveFind(item);
+
+			if (item.compareTo(this.element) > 0)
+				this.rightChild.recursiveFind(item);
+
 			if (item.compareTo(this.element) == 0)
-				return true;
+				return this;
 
-			else if (item.compareTo(this.element) < 0)
-				this.leftChild.recursiveContains(item);
-
-			else if (item.compareTo(this.element) > 0)
-				this.rightChild.recursiveContains(item);
-
-			return false;
+			return null;
 		}
-		
-		public T recursiveFirst() {
+
+		public BinaryNode<T> recursiveFirst() {
 			if (this.leftChild != null)
 				this.leftChild.recursiveFirst();
-			return this.element;
+			return this;
 		}
-		
-		public T recursiveLast() {
+
+		public BinaryNode<T> recursiveLast() {
 			if (this.rightChild != null)
 				this.rightChild.recursiveLast();
-			return this.element;
+			return this;
 		}
 	}
 
@@ -158,8 +165,8 @@ public class BinarySearchTree<Type extends Comparable<? super Type>> implements 
 			size++;
 			return true;
 		}
+
 		return false;
-		
 	}
 
 	/**
@@ -203,7 +210,10 @@ public class BinarySearchTree<Type extends Comparable<? super Type>> implements 
 	 */
 	@Override
 	public boolean contains(Type item) {
-		return root.recursiveContains(item);
+		if (root.recursiveFind(item) != null)
+			return true;
+
+		return false;
 	}
 
 	/**
@@ -233,11 +243,11 @@ public class BinarySearchTree<Type extends Comparable<? super Type>> implements 
 	public Type first() throws NoSuchElementException {
 		if (size == 0)
 			throw new NoSuchElementException();
-		return root.recursiveFirst();
+		return root.recursiveFirst().element;
 	}
 
 	/**
-	 * Returns true if this set contains no items.
+	 * Returns true if this BinarySearchTree contains no items.
 	 */
 	@Override
 	public boolean isEmpty() {
@@ -245,21 +255,84 @@ public class BinarySearchTree<Type extends Comparable<? super Type>> implements 
 	}
 
 	/**
-	 * Returns the last (i.e., largest) item in this set.
+	 * Returns the last (i.e., largest) item in this BinarySearchTree.
 	 * 
-	 * @throws NoSuchElementException if the set is empty
+	 * @throws NoSuchElementException if the BinarySearchTree is empty
 	 */
 	@Override
 	public Type last() throws NoSuchElementException {
 		if (size == 0)
 			throw new NoSuchElementException();
-		return root.recursiveLast();
+		return root.recursiveLast().element;
 	}
 
+	/**
+	 * Ensures that this BinarySearchTree does not contain the specified item.
+	 * 
+	 * @param item - the item whose absence is ensured in this BinarySearchTree
+	 * @return true if this BinarySearchTree changed as a result of this method call
+	 *         (that is, if the input item was actually removed); otherwise, returns
+	 *         false
+	 */
 	@Override
 	public boolean remove(Type item) {
-		// TODO Auto-generated method stub
-		return false;
+		BinaryNode<Type> itemNode = root.recursiveFind(item);
+
+		if (itemNode == null)
+			return false;
+
+		if (itemNode.leftChild == null && itemNode.rightChild == null)
+			removeLeaf(itemNode);
+
+		else if (itemNode.leftChild != null && itemNode.rightChild != null) {
+			BinaryNode<Type> replacementNode = itemNode.rightChild.recursiveFirst();
+
+			itemNode.parent.element = replacementNode.element;
+			removeLeaf(replacementNode);
+		}
+
+		else
+			bypassNode(itemNode);
+
+		return true;
+	}
+
+	/**
+	 * Removes the specified leaf from a BinarySearchTree
+	 * 
+	 * @param itemNode - the leaf of the BinarySearchTree to be removed
+	 */
+	private void removeLeaf(BinaryNode<Type> itemNode) {
+		if (itemNode.element.compareTo(itemNode.parent.element) < 0)
+			itemNode.parent.leftChild = null;
+
+		else
+			itemNode.parent.rightChild = null;
+	}
+
+	/**
+	 * Bypasses a node with one child in a BinarySearchTree
+	 * 
+	 * @param itemNode - Node to be bypassed
+	 */
+	private void bypassNode(BinaryNode<Type> itemNode) {
+		// Makes sure the child of the bypassed Node is set as the correct child of the
+		// parent Node
+		if (itemNode.element.compareTo(itemNode.parent.element) < 0) {
+
+			// Checks which child exists and adds it as the child of the parent
+			if (itemNode.leftChild != null)
+				itemNode.parent.leftChild = itemNode.leftChild;
+			else
+				itemNode.parent.leftChild = itemNode.rightChild;
+		} else {
+
+			// Checks which child exists and adds it as the child of the parent
+			if (itemNode.leftChild != null)
+				itemNode.parent.rightChild = itemNode.leftChild;
+			else
+				itemNode.parent.rightChild = itemNode.rightChild;
+		}
 	}
 
 	@Override
