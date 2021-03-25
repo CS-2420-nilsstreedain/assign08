@@ -8,6 +8,14 @@ import java.util.NoSuchElementException;
 
 public class BinarySearchTree<Type extends Comparable<? super Type>> implements SortedSet<Type> {
 
+	/**This private nested class allows type elements to act as nodes, 
+	 * pointing to a right child, a left child, and a parent.
+	 * This class also contains methods to do recursive work
+	 * for insertions, deletions, and traversals.
+	 * @author Paul Nuffer and Nils Streedain
+	 *
+	 * @param <T> - generic type that extends comparable
+	 */
 	private class BinaryNode<T extends Comparable<? super T>> {
 		public T element;
 		public BinaryNode<T> leftChild;
@@ -36,53 +44,86 @@ public class BinarySearchTree<Type extends Comparable<? super Type>> implements 
 			this(element, null, null);
 		}
 
-		public String generateDot() {
-			String ret = "\tnode" + element + " [label = \"<f0> |<f1> " + element + "|<f2> \"]\n";
+		/**Generates a dot representation of the tree beginning at this node's subtree, rooted
+		 * at this node.
+		 * @return a StringBuilder object containing the entire dot representation beginning at this node's subtree
+		 */
+		public StringBuilder generateDot() {
+			StringBuilder ret = new StringBuilder("\tnode" + element + " [label = \"<f0> |<f1> " + element + "|<f2> \"]\n");
 			if (leftChild != null)
-				ret += "\tnode" + element + ":f0 -> node" + leftChild.element + ":f1\n" + leftChild.generateDot();
+				ret.append("\tnode" + element + ":f0 -> node" + leftChild.element + ":f1\n" + leftChild.generateDot());
 			if (rightChild != null)
-				ret += "\tnode" + element + ":f2 -> node" + rightChild.element + ":f1\n" + rightChild.generateDot();
+				ret.append("\tnode" + element + ":f2 -> node" + rightChild.element + ":f1\n" + rightChild.generateDot());
 
 			return ret;
 		}
 
+		/**This method attempts to add the passed in item as one of this node's children,
+		 * checking if it would be a right or left child, then adding to the selected
+		 * child reference if the reference is null, else calling itself recursively
+		 * on the non null child.
+		 * @param item, the item to add to the node
+		 * @return true if the item gets added, if any change is ever made. False if no change
+		 * is made, due to item already existing in this node's subtree
+		 */
 		public boolean recursiveAdd(T item) {
 
+			//if item belongs to the left of this node
 			if (item.compareTo(this.element) < 0) {
+				//if leftChild is null, set leftChild to reference a new node with
+				//item's data. Set the new node's parent to this
 				if (this.leftChild == null) {
 					this.leftChild = new BinaryNode<T>(item);
 					this.leftChild.parent = this;
 					return true;
 				}
+				//if child not null, attempt recursive add on child
 				if (this.leftChild.recursiveAdd(item))
 					return true;
 
 			}
-
+			
+			//if item belongs to the right of this node
 			if (item.compareTo(this.element) > 0) {
+				//if rightChild is null, set rightChild to reference a new node with
+				//item's data. Set the new node's parent to this
 				if (this.rightChild == null) {
 					this.rightChild = new BinaryNode<T>(item);
 					this.rightChild.parent = this;
 					return true;
 				}
+				//if child not null, attempt recursive add on child
 				if (this.rightChild.recursiveAdd(item))
 					return true;
 
 			}
 
+			//if code reaches here, no item was ever added due to item not being greater or less than
+			//this node, that is, it was equal to this node
 			return false;
 		}
 
+		/**This method uses recursion to find the node that contains the type element item
+		 * @param item - the type element to find
+		 * @return the node containing the specified type element, null if no node has matching
+		 * type element
+		 */
 		public BinaryNode<T> recursiveFind(T item) {
+			//if item to find is less than this, and this has a non null left child,
+			//recursiveFind at this' left child
 			if (item.compareTo(this.element) < 0 && this.leftChild != null)
 				return this.leftChild.recursiveFind(item);
-
+			
+			//if item to find is greater than this, and this has a non null right child,
+			//recursiveFind at this' right child
 			if (item.compareTo(this.element) > 0 && this.rightChild != null)
 				return this.rightChild.recursiveFind(item);
 
-			if (item.compareTo(this.element) == 0)
+			//if item matches this' element, return this as the match is found
+			if (item.equals(this.element))
 				return this;
 
+			//if code reaches here, no match was found, so return null
 			return null;
 		}
 
