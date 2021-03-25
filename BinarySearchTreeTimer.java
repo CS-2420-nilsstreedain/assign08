@@ -2,6 +2,7 @@ package assign08;
 
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.TreeSet;
 
 /**
  * This class collects running times for methods of GraphUtility.
@@ -11,30 +12,29 @@ import java.util.Random;
  */
 public class BinarySearchTreeTimer {
 	public static void main(String[] args) {
-		
+		Random rng = new Random();
 		System.out.println("N\tnanoTime");
 		
-		BinarySearchTree<Integer> bst = new BinarySearchTree<>();
 		
-		int incr = 10000;
+		int incr = 2500;
 		for (int probSize = 10000; probSize <= 200000; probSize += incr) {
 
-			int timesToLoop = 10000;
+			int timesToLoop = 100000;
 			
 			
-			// adding in sorted order
-			for (int i = probSize - incr; i < probSize; i++)
-				bst.add(i);
+
 			
 			// adding in random order
-//			Random rng = new Random();
-//			ArrayList<Integer> intArray = new ArrayList<>();
-//			
-//			for (int i = 0; i < probSize; i++)
-//				intArray.add(i);
-//
-//			for (int i = probSize; i > 0; i--)
-//				bst.add(intArray.remove(rng.nextInt(i)));
+			BinarySearchTree<Integer> bst = new BinarySearchTree<>();
+			TreeSet<Integer> balanced = new TreeSet<>();
+			ArrayList<Integer> intArray = new ArrayList<>();	
+			for (int i = 0; i < probSize; i++)
+				intArray.add(i);
+			for (int i = probSize; i > 0; i--) {
+				int temp = intArray.remove(rng.nextInt(i));
+//				bst.add(temp);
+				balanced.add(temp);
+			}	
 			
 			// First, spin computing stuff until one second has gone by.
 			// This allows this thread to stabilize.
@@ -45,14 +45,17 @@ public class BinarySearchTreeTimer {
 			startTime = System.nanoTime();
 				
 			for (int i = 0; i < timesToLoop; i++) {
-				bst.contains(probSize);
+//				bst.contains(rng.nextInt(probSize));
+				balanced.contains(rng.nextInt(probSize));
 			}
 
 			midpointTime = System.nanoTime();
 
 			// Capture the cost of running the loop and any other operations done
 			// above that are not the essential method call being timed.
-			for (int i = 0; i < timesToLoop; i++) {}
+			for (int i = 0; i < timesToLoop; i++) {
+				rng.nextInt(probSize);
+			}
 
 			stopTime = System.nanoTime();
 
