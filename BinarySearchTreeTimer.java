@@ -12,7 +12,7 @@ import java.util.TreeSet;
  */
 public class BinarySearchTreeTimer {
 	public static void main(String[] args) {
-		Random rng = new Random();
+		Random rng = new Random(1);
 		System.out.println("N\tnanoTime");
 		
 		
@@ -32,8 +32,8 @@ public class BinarySearchTreeTimer {
 				intArray.add(i);
 			for (int i = probSize; i > 0; i--) {
 				int temp = intArray.remove(rng.nextInt(i));
-//				bst.add(temp);
-				balanced.add(temp);
+				bst.add(temp);
+//				balanced.add(temp);
 			}	
 			
 			// First, spin computing stuff until one second has gone by.
@@ -45,8 +45,8 @@ public class BinarySearchTreeTimer {
 			startTime = System.nanoTime();
 				
 			for (int i = 0; i < timesToLoop; i++) {
-//				bst.contains(rng.nextInt(probSize));
-				balanced.contains(rng.nextInt(probSize));
+				bst.contains(rng.nextInt(probSize));
+//				balanced.contains(rng.nextInt(probSize));
 			}
 
 			midpointTime = System.nanoTime();
