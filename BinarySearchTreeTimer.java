@@ -12,17 +12,18 @@ import java.util.Random;
 public class BinarySearchTreeTimer {
 	public static void main(String[] args) {
 		
-		BinarySearchTree<Integer> bst = new BinarySearchTree<>();
-		
 		System.out.println("N\tnanoTime");
+		
+		BinarySearchTree<Integer> bst = new BinarySearchTree<>();
 		
 		int incr = 10000;
 		for (int probSize = 10000; probSize <= 200000; probSize += incr) {
 
-			int timesToLoop = 6000;
+			int timesToLoop = 10000;
+			
 			
 			// adding in sorted order
-			for (int i = 0; i < probSize; i++)
+			for (int i = probSize - incr; i < probSize; i++)
 				bst.add(i);
 			
 			// adding in random order
@@ -44,8 +45,7 @@ public class BinarySearchTreeTimer {
 			startTime = System.nanoTime();
 				
 			for (int i = 0; i < timesToLoop; i++) {
-				for (int j = 0; j < probSize; j++)
-					bst.contains(j);
+				bst.contains(probSize);
 			}
 
 			midpointTime = System.nanoTime();
