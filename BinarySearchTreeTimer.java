@@ -19,22 +19,20 @@ public class BinarySearchTreeTimer {
 		int incr = 2500;
 		for (int probSize = 10000; probSize <= 200000; probSize += incr) {
 
-			int timesToLoop = 100000;
-			
-			
-
+			int timesToLoop = 2;
 			
 			// adding in random order
-			BinarySearchTree<Integer> bst = new BinarySearchTree<>();
-			TreeSet<Integer> balanced = new TreeSet<>();
-			ArrayList<Integer> intArray = new ArrayList<>();	
-			for (int i = 0; i < probSize; i++)
-				intArray.add(i);
-			for (int i = probSize; i > 0; i--) {
-				int temp = intArray.remove(rng.nextInt(i));
-				bst.add(temp);
-//				balanced.add(temp);
-			}	
+			ArrayList<Integer> intArray = new ArrayList<>();
+			ArrayList<Integer> randomArray = new ArrayList<>();
+			for (int j = 0; j < probSize; j++)
+				intArray.add(j);
+			for (int j = probSize; j > 0; j--) {
+				int temp = intArray.remove(rng.nextInt(j));
+				randomArray.add(temp);
+			}
+
+			
+				
 			
 			// First, spin computing stuff until one second has gone by.
 			// This allows this thread to stabilize.
@@ -45,8 +43,9 @@ public class BinarySearchTreeTimer {
 			startTime = System.nanoTime();
 				
 			for (int i = 0; i < timesToLoop; i++) {
-				bst.contains(rng.nextInt(probSize));
-//				balanced.contains(rng.nextInt(probSize));
+	//			BinarySearchTree<Integer> bst = new BinarySearchTree<Integer>();
+	//			bst.addAll(randomArray);
+				TreeSet<Integer> balanced = new TreeSet<>(randomArray);
 			}
 
 			midpointTime = System.nanoTime();
@@ -54,7 +53,7 @@ public class BinarySearchTreeTimer {
 			// Capture the cost of running the loop and any other operations done
 			// above that are not the essential method call being timed.
 			for (int i = 0; i < timesToLoop; i++) {
-				rng.nextInt(probSize);
+				
 			}
 
 			stopTime = System.nanoTime();
