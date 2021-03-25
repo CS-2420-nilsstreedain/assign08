@@ -11,6 +11,7 @@ import java.util.TreeSet;
  * @version March 10, 2021
  */
 public class BinarySearchTreeTimer {
+	@SuppressWarnings("unused")
 	public static void main(String[] args) {
 		Random rng = new Random(1);
 		System.out.println("N\tnanoTime");
