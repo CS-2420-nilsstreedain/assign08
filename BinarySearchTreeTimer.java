@@ -44,7 +44,8 @@ public class BinarySearchTreeTimer {
 			startTime = System.nanoTime();
 				
 			for (int i = 0; i < timesToLoop; i++) {
-				bst.contains(i);
+				for (int j = 0; j < probSize; j++)
+					bst.contains(j);
 			}
 
 			midpointTime = System.nanoTime();
