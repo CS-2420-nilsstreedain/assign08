@@ -6,8 +6,6 @@ import java.util.ArrayList;
 import java.util.NoSuchElementException;
 import java.util.Random;
 
-import javax.swing.text.DocumentFilter.FilterBypass;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

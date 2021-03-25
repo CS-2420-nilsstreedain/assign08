@@ -35,28 +35,6 @@ public class BinarySearchTree<Type extends Comparable<? super Type>> implements 
 		public BinaryNode(T element) {
 			this(element, null, null);
 		}
-		
-
-		/**
-		 * Generate a copy of the tree rooted at this node.
-		 * 
-		 * @return the tree copy
-		 */
-		public BinaryNode<T> duplicate() {
-			BinaryNode<T> copyLeft = null;
-			
-			// get copy of left subtree
-			if(leftChild != null)
-				copyLeft = leftChild.duplicate(); 
-
-			// get copy of right subtree
-			BinaryNode<T> copyRight = null;
-			if(rightChild != null)
-				copyRight = rightChild.duplicate(); 
-
-			// combine left and right in a new node w/ element
-			return new BinaryNode<T>(this.element, copyLeft, copyRight);
-		}
 
 		public String generateDot() {
 			String ret = "\tnode" + element + " [label = \"<f0> |<f1> " + element + "|<f2> \"]\n";
